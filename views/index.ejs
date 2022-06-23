@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+    <div class="container-fluid">
+      <div class="row content">
+        <div class="col-sm-12">
+          <h4><small>Demo</small></h4>
+          <hr />
+          <div class="container">
+            <div class="col-md-8 col-md-offset-2">
+              <h3>File Input Example</h3>
+              <form method="post" action="/posts">
+                <label class="form-label" for="customFile"
+                  >Default file input example</label
+                >
+                <input type="file" class="form-control" id="file" />
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+              <h1>Result</h1>
+              <a id="result"></a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $("form").submit(function (e) {
+      //   var data;
+
+      //   data = new FormData();
+      //   data.append("img", $("#file")[0].files[0]);
+
+      var form = new FormData();
+      form.append("img", $("#file")[0].files[0]);
+
+      var settings = {
+        url: "http://localhost:3000/posts",
+        method: "POST",
+        timeout: 0,
+        processData: false,
+        mimeType: "multipart/form-data",
+        contentType: false,
+        data: form,
+        success: function (data) {
+          $("#result").text(data);
+        },
+      };
+      $.ajax(settings);
+
+      e.preventDefault();
+    });
+  </script>
+  <script
+    src="https://code.jquery.com/jquery-3.6.0.js"
+    integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+    crossorigin="anonymous"
+  ></script>
+</html>
