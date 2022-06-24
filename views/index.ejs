@@ -25,6 +25,8 @@
                   >Default file input example</label
                 >
                 <input type="file" class="form-control" id="file" />
+                <label>Name</label>
+                <input type="text" class="form-control" id="file-name" />
                 <button type="submit" class="btn btn-primary">Submit</button>
               </form>
               <h1>Result</h1>
@@ -45,14 +47,18 @@
       var form = new FormData();
       form.append("img", $("#file")[0].files[0]);
 
+      let filename = $("#file-name").val();
       var settings = {
-        url: "http://localhost:3000/posts",
+        url: "http://45.77.119.159/posts",
         method: "POST",
         timeout: 0,
         processData: false,
         mimeType: "multipart/form-data",
         contentType: false,
         data: form,
+        headers: {
+          filename: filename,
+        },
         success: function (data) {
           $("#result").text(data);
         },

@@ -3,11 +3,16 @@ const multer = require("multer");
 const path = require("path");
 const app = express();
 const cors = require("cors");
+const bodyParser = require("body-parser");
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
 app.use("/static", express.static("public"));
+
+// app.use(bodyParser.json());
+// app.use(bodyParser.urlencoded({ extended: true }));
+// app.use(multer().array());
 
 app.listen(3000, () => console.log("Server is listen 3000"));
 
@@ -20,20 +25,20 @@ app.use(
 const storage = multer.diskStorage({
   destination: "public",
   filename: (req, file, cb) => {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
+    let filename = req.headers.filename
+      ? req.headers.filename + path.extname(file.originalname)
+      : file.fieldname + "-" + Date.now() + path.extname(file.originalname);
+    cb(null, filename);
   },
 });
 // Init upload
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
-    console.log("111");
     checkFileType(file, cb);
   },
 }).single("img");
+
 // Check file input
 function checkFileType(file, cb) {
   // Allowed ext
@@ -50,9 +55,13 @@ function checkFileType(file, cb) {
   }
 }
 
-app.post("/posts", upload, (req, res) => {
-  console.log(req.file);
-  return res.send(`localhost:3000/static/${req.file.filename}`);
+const middleware = (req, res, next) => {
+  console.log(req.body);
+  next();
+};
+
+app.post("/posts", middleware, upload, (req, res) => {
+  return res.send(`http://45.77.119.159/static/${req.file.filename}`);
 });
 
 app.get("/", (req, res) => {
